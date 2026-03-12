@@ -13,39 +13,36 @@ class Presentacion(Slide):
 
         # self.slide_memoria_primaria()
         # self.slide_memoria_secundaria()
-        # self.slide_registers()
 
+        # self.slide_registers()
         # self.slide_cache()
         # self.slide_ram()
         # self.slide_ram_escalabilidad()
 
         # self.slide_simulador_nand2tetris()
 
+        # self.almacenamiento_secundario()
+
+        # self.diapositiva_detalles_hdd()
+        # self.slide_funcionamiento_hdd()
+        self.slide_delay_hdd()
+        # self.slide_ventajas_hdd()
+        # self.slide_desventajas_hdd()
+        
+
+        # self.slide_ssd_unidades()
+        # ## self.slide_ssd_funcionamiento()
+        # self.slide_tipos_memoria_flash()
+        # self.slide_ventajas_ssd()
+        # self.slide_desventajas_ssd()
+        
+        # self.slide_medios_magneticos()
+
         # self.slide_caracteristicas()
         # self.slide_ventajas()
         # self.slide_desventajas()
 
         # self.slide_memory_standards()
-
-        # self.memoria_secundaria1()
-
-        # self.diapositiva_detalles_hdd()
-
-        # self.slide_estructura_hdd()
-
-        # self.slide_delay_hdd()
-
-        # self.slide_funcionamiento_hdd()
-        # self.slide_ventajas_hdd()
-        # self.slide_desventajas_hdd()
-        
-        #self.slide_ssd_unidades()
-        #self.slide_ssd_funcionamiento()
-        #self.slide_tipos_memoria_flash()
-        #self.slide_ventajas_ssd()
-        #self.slide_desventajas_ssd()
-        
-        self.slide_medios_magneticos()
 
         # self.slide_despedida()
 
@@ -86,10 +83,10 @@ class Presentacion(Slide):
         grupo_enunciado = VGroup(linea_acento, bloque_izquierdo).to_edge(LEFT, buff=0.6).shift(UP * 0.2)
 
         niveles = [
-            "Registros (CPU)", 
-            "Caché (L1, L2, L3)", 
+            "CPU", 
+            "Caché", 
             "Memoria RAM", 
-            "Disco (SSD / HDD)"
+            "Disco"
         ]
         anchos = [2.2, 3.4, 4.6, 5.8]
         colores_fondo = [WHITE, LIGHT_GRAY, GRAY, DARK_GRAY]
@@ -510,440 +507,518 @@ class Presentacion(Slide):
         
         self.next_slide()
         self.limpiar_pantalla()
+
     def slide_registers(self):
+        # --- 1. PALETA DE COLORES B&W ---
         fuente = "sans-serif"
         color_texto = BLACK
-        color_secundario = DARK_GRAY
-        color_acento = GRAY
-        color_bg_suave = "#F4F4F4"
-        titulo = Text(
-            "Registers", 
-            font=fuente, font_size=45, color=color_texto, weight=BOLD
-        ).to_edge(UP, buff=0.4)
+        color_secundario = GRAY_D
+        color_acento = BLACK  # Se usa negro para máximo contraste en escala de grises
+        color_lineas = GRAY_C
+        color_bg_suave = "#F4F4F4" # Gris muy claro para el fondo del diagrama
         
-        linea_subtitulo = Line(LEFT, RIGHT, color=color_acento, stroke_width=2).scale(2).next_to(titulo, DOWN, buff=0.1)
+        # --- 2. TÍTULO CENTRADO Y VIÑETAS ---
+        # Título centrado en la parte superior
+        titulo = Text("REGISTERS", font=fuente, font_size=45, color=color_texto, weight=BOLD)
+        titulo.to_edge(UP, buff=0.4)
+        
+        linea_subtitulo = Line(LEFT, RIGHT, color=color_acento, stroke_width=3).scale(1.5)
+        linea_subtitulo.next_to(titulo, DOWN, buff=0.1)
 
-        self.play(Write(titulo))
-        self.play(Create(linea_subtitulo))
-        self.next_slide() 
-
-        viñetas = [
-            "  - Pequeñas unidades de memoria.",
-            "  - Ubicadas dentro de la CPU.",
-            "  - Alta velocidad de operación.",
-            "  - Guardan datos e instrucciones.",
-            "  - Para la información de uso más frecuente."
+        viñetas_textos = [
+            "Pequeñas unidades de memoria.",
+            "Ubicadas dentro de la CPU.",
+            "Alta velocidad de operación.",
+            "Guardan datos e instrucciones.",
+            "Almacenan la información\nde uso más frecuente."
         ]
         
+        # Viñetas alineadas a la izquierda (independientes del título centrado)
         grupo_texto = VGroup(
-            *[Text(linea, font=fuente, font_size=20, color=color_secundario) for linea in viñetas]
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
-
-        linea_acento_texto = Line(
-            grupo_texto.get_corner(UL) + UP*0.1, 
-            grupo_texto.get_corner(DL) + DOWN*0.1, 
-            color=color_acento, stroke_width=4
-        )
-        grupo_izquierdo = VGroup(linea_acento_texto, grupo_texto).to_edge(LEFT, buff=0.8).shift(DOWN * 0.2)
-
-        self.play(Create(linea_acento_texto))
-        self.play(FadeIn(grupo_texto, shift=RIGHT * 0.2))
-        self.next_slide() 
-
-        centro_diag = RIGHT * 3.5 + DOWN * 0.3
+            *[VGroup(Dot(radius=0.05, color=color_acento), Text(linea, font=fuente, font_size=22, color=color_secundario)).arrange(RIGHT, buff=0.2) 
+              for linea in viñetas_textos]
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.4)
         
+        grupo_texto.to_edge(LEFT, buff=0.8).shift(DOWN * 0.2)
+
+        # --- 3. ESQUEMA DEL REGISTRO (Ajustado para que nada se salga) ---
+        centro_diag = RIGHT * 3.2 + DOWN * 0.4
+        
+        # Fondo ampliado para contener bien las flechas
         fondo_circuito = RoundedRectangle(
-            width=6.5, height=4.2, corner_radius=0.2,
-            fill_color=color_bg_suave, fill_opacity=0.6, 
-            stroke_width=2, stroke_color=GRAY
+            width=6.8, height=4.5, corner_radius=0.3,
+            fill_color=color_bg_suave, fill_opacity=1, 
+            stroke_width=1.5, stroke_color=color_lineas
         ).move_to(centro_diag)
 
         caja_registro = RoundedRectangle(
-            width=3.6, height=1.6, corner_radius=0.1,
+            width=3.0, height=1.6, corner_radius=0.15,
             fill_color=WHITE, fill_opacity=1, 
             stroke_width=3, stroke_color=color_texto
         ).move_to(centro_diag)
         
-        txt_registro = Text("Register", font=fuente, font_size=26, color=color_texto, weight=BOLD).move_to(caja_registro).shift(UP * 0.1)
+        txt_registro = Text("Register", font=fuente, font_size=26, color=color_texto, weight=BOLD).move_to(caja_registro)
         
-        reloj = Triangle(color=color_texto, fill_opacity=0, stroke_width=2)
-        reloj.stretch_to_fit_width(0.35)
-        reloj.stretch_to_fit_height(0.25) 
-        reloj.next_to(caja_registro.get_bottom(), UP, buff=0)
+        reloj = Triangle(color=color_texto, fill_opacity=0, stroke_width=2).scale(0.15)
+        reloj.move_to(caja_registro.get_bottom(), aligned_edge=DOWN)
 
-        flecha_in_start = caja_registro.get_left() + LEFT * 1.4
-        flecha_in_end = caja_registro.get_left()
-        flecha_in = Arrow(start=flecha_in_start, end=flecha_in_end, buff=0, color=color_texto, stroke_width=4, max_tip_length_to_length_ratio=0.15)
-        
-        label_in = Text("in", font=fuente, font_size=22, color=color_texto).next_to(flecha_in, UP, buff=0.12).shift(LEFT*0.3)
-        slash_in = Line(DOWN, UP, color=color_acento, stroke_width=2).scale(0.25).rotate(PI/4).move_to(flecha_in.get_center())
-        txt_16_in = Text("16", font=fuente, font_size=16, color=color_acento).next_to(slash_in, DOWN, buff=0.1)
+        # Bus ajustado para que quepa dentro de 'fondo_circuito'
+        def crear_bus(start, end, label_str, color=color_texto):
+            flecha = Arrow(start=start, end=end, buff=0, color=color, stroke_width=4, max_tip_length_to_length_ratio=0.15)
+            label = Text(label_str, font=fuente, font_size=20, color=color).next_to(flecha, UP, buff=0.1)
+            slash = Line(DL, UR, color=color, stroke_width=2).scale(0.15).move_to(flecha.get_center())
+            txt_16 = Text("16", font=fuente, font_size=14, color=color).next_to(slash, DOWN, buff=0.05).shift(RIGHT*0.1)
+            return VGroup(flecha, label, slash, txt_16), flecha
 
-        flecha_out_start = caja_registro.get_right()
-        flecha_out_end = caja_registro.get_right() + RIGHT * 1.4
-        flecha_out = Arrow(start=flecha_out_start, end=flecha_out_end, buff=0, color=color_texto, stroke_width=4, max_tip_length_to_length_ratio=0.15)
-        
-        label_out = Text("out", font=fuente, font_size=22, color=color_texto).next_to(flecha_out, UP, buff=0.12).shift(RIGHT*0.3)
-        slash_out = Line(DOWN, UP, color=color_acento, stroke_width=2).scale(0.25).rotate(PI/4).move_to(flecha_out.get_center())
-        txt_16_out = Text("16", font=fuente, font_size=16, color=color_acento).next_to(slash_out, DOWN, buff=0.1)
+        grupo_in, flecha_in = crear_bus(caja_registro.get_left() + LEFT * 1.4, caja_registro.get_left(), "in")
+        grupo_out, flecha_out = crear_bus(caja_registro.get_right(), caja_registro.get_right() + RIGHT * 1.4, "out")
 
-        flecha_load_start = caja_registro.get_top() + UP * 1.0
-        flecha_load_end = caja_registro.get_top()
-        flecha_load = Arrow(start=flecha_load_start, end=flecha_load_end, buff=0, color=GRAY, stroke_width=3, max_tip_length_to_length_ratio=0.15)
-        label_load = Text("load", font=fuente, font_size=20, color=GRAY).next_to(flecha_load, UP, buff=0.1)
+        flecha_load = Arrow(start=caja_registro.get_top() + UP * 0.8, end=caja_registro.get_top(), buff=0, color=color_secundario, stroke_width=3)
+        label_load = Text("load", font=fuente, font_size=18, color=color_secundario).next_to(flecha_load, RIGHT, buff=0.1)
         grupo_load = VGroup(flecha_load, label_load)
 
-        self.play(FadeIn(fondo_circuito, shift=UP * 0.2))
+        # --- 4. SECUENCIA DE ANIMACIONES ---
+        self.play(Write(titulo), Create(linea_subtitulo), run_time=1)
         self.play(
             LaggedStart(
-                Create(caja_registro),
-                Write(txt_registro),
-                Create(reloj),
-                lag_ratio=0.2
-            )
+                *[FadeIn(item, shift=RIGHT * 0.2) for item in grupo_texto],
+                lag_ratio=0.15
+            ),
+            run_time=2
         )
         self.next_slide() 
 
+        self.play(FadeIn(fondo_circuito, shift=UP * 0.1))
         self.play(
-            GrowArrow(flecha_in),
-            FadeIn(label_in),
-            FadeIn(slash_in),
-            FadeIn(txt_16_in)
-        )
-        self.next_slide() 
-
-        self.play(FadeIn(grupo_load, shift=DOWN * 0.1))
-        self.next_slide() 
-
-        paquete_entrada = Square(side_length=0.1, color=DARK_GRAY, fill_opacity=1).move_to(flecha_in_start)
-        paquete_salida = Square(side_length=0.1, color=DARK_GRAY, fill_opacity=1).move_to(flecha_out_start)
-
-        self.play(
-            label_load.animate.set_color(color_texto),
-            flecha_load.animate.set_color(color_texto),
-            FadeIn(paquete_entrada),
-            paquete_entrada.animate.move_to(flecha_in_end + RIGHT*0.2), 
-            run_time=1
-        )
-        self.next_slide() 
-
-        self.play(
-            FadeOut(paquete_entrada), 
-            GrowArrow(flecha_out),
-            FadeIn(label_out),
-            FadeIn(slash_out),
-            FadeIn(txt_16_out),
-            paquete_salida.animate.move_to(flecha_out_end), 
+            Create(caja_registro),
+            Write(txt_registro),
+            Create(reloj),
             run_time=1.5
         )
-        
-        self.next_slide()
-        self.play(
-            *[FadeOut(mob) for mob in self.mobjects]
-        )
-
-    def slide_cache(self):
-        fuente = "sans-serif"
-        color_texto = BLACK
-        color_secundario = DARK_GRAY
-        color_acento = GRAY
-        
-        color_cpu = "#E0E0E0"      
-        color_cache = "#B0B0B0"   
-        color_memoria = "#D0D0D0" 
-
-        titulo = Text(
-            "Cache", 
-            font=fuente, font_size=45, color=color_texto, weight=BOLD
-        ).to_edge(UP, buff=0.4)
-        
-        linea_subtitulo = Line(LEFT, RIGHT, color=color_acento, stroke_width=2).scale(2).next_to(titulo, DOWN, buff=0.1)
-
-        self.play(Write(titulo))
-        self.play(Create(linea_subtitulo))
+        self.play(FadeIn(grupo_in, shift=RIGHT * 0.2))
+        self.play(FadeIn(grupo_load, shift=DOWN * 0.2))
         self.next_slide() 
 
-        viñetas = [
-            "  - Unidad de memoria pequeña y muy rápida.",
-            "  - Ubicada estratégicamente cerca de la CPU.",
-            "  - Almacena datos e instrucciones recientes.",
-            "  - Evita viajes lentos a la Memoria Principal.",
-            "  - Minimiza drásticamente el tiempo de acceso."
+        # Datos en negro
+        datos_entrada = Text("1010", font="monospace", font_size=18, color=BLACK, weight=BOLD)
+        datos_entrada.move_to(flecha_in.get_start() + UP * 0.3)
+        
+        self.play(FadeIn(datos_entrada))
+        
+        # Animación ajustada: el dato ahora entra hasta el centro de la caja para no quedarse en el borde
+        self.play(datos_entrada.animate.move_to(caja_registro.get_center()), run_time=1)
+        self.next_slide() 
+
+        self.play(
+            flecha_load.animate.set_color(BLACK),
+            label_load.animate.set_color(BLACK),
+            run_time=0.5
+        )
+        
+        # Parpadeo en gris oscuro para indicar guardado
+        self.play(
+            FadeOut(datos_entrada, scale=0.5), 
+            Indicate(caja_registro, color=GRAY_D, scale_factor=1.05), 
+            run_time=0.8
+        )
+        self.next_slide() 
+
+        self.play(FadeIn(grupo_out, shift=RIGHT * 0.2))
+        
+        datos_salida = Text("1010", font="monospace", font_size=18, color=BLACK, weight=BOLD)
+        # El dato ahora sale desde el centro de la caja hacia la flecha
+        datos_salida.move_to(caja_registro.get_center())
+        
+        self.play(FadeIn(datos_salida, scale=0.5))
+        self.play(
+            datos_salida.animate.move_to(flecha_out.get_end() + RIGHT * 0.2), 
+            run_time=1.2
+        )
+        self.play(FadeOut(datos_salida, shift=RIGHT*0.2))
+
+        # Comandos finales activos
+        self.next_slide()
+        self.limpiar_pantalla()
+
+    def slide_cache(self):
+        # --- 1. PALETA DE COLORES B&W ---
+        fuente = "sans-serif"
+        color_texto = BLACK
+        color_secundario = GRAY_D
+        color_acento = BLACK
+        
+        # Tonos de gris para diferenciar la jerarquía
+        color_cpu = BLACK
+        color_cache = GRAY_D
+        color_memoria = GRAY_B
+
+        # --- 2. TÍTULO CENTRADO CON TILDE ---
+        titulo = Text("CACHÉ", font=fuente, font_size=45, color=color_texto, weight=BOLD)
+        titulo.to_edge(UP, buff=0.4)
+        
+        linea_subtitulo = Line(LEFT, RIGHT, color=color_acento, stroke_width=3).scale(1.5)
+        linea_subtitulo.next_to(titulo, DOWN, buff=0.1)
+
+        # --- 3. VIÑETAS ---
+        viñetas_textos = [
+            "Unidad de memoria pequeña y muy rápida.",
+            "Ubicada estratégicamente cerca de la CPU.",
+            "Almacena datos e instrucciones recientes.",
+            "Evita viajes lentos a la Memoria Principal.",
+            "Minimiza drásticamente el tiempo de acceso."
         ]
         
         grupo_texto = VGroup(
-            *[Text(linea, font=fuente, font_size=20, color=color_secundario) for linea in viñetas]
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.25)
+            *[VGroup(Dot(radius=0.05, color=color_acento), Text(linea, font=fuente, font_size=20, color=color_secundario)).arrange(RIGHT, buff=0.2) 
+              for linea in viñetas_textos]
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.4)
+        
+        grupo_texto.to_edge(LEFT, buff=0.8).shift(DOWN * 0.2)
 
-        linea_acento_texto = Line(
-            grupo_texto.get_corner(UL) + UP*0.1, 
-            grupo_texto.get_corner(DL) + DOWN*0.1, 
-            color=color_acento, stroke_width=4
-        )
-        grupo_izquierdo = VGroup(linea_acento_texto, grupo_texto).to_edge(LEFT, buff=0.8).shift(DOWN * 0.2)
-
-        self.play(Create(linea_acento_texto))
-
-        self.play(LaggedStart(*[FadeIn(texto, shift=RIGHT * 0.1) for texto in grupo_texto], lag_ratio=0.3))
-        self.next_slide() 
-
+        # --- 4. ESQUEMA JERÁRQUICO ---
         centro_x = 3.5
         
-        caja_cpu = RoundedRectangle(width=3.5, height=1.0, corner_radius=0.1, fill_color=color_cpu, fill_opacity=1, stroke_width=2, stroke_color=color_texto)
-        caja_cpu.move_to([centro_x, 1.6, 0])
-        txt_cpu = Text("CPU", font=fuente, font_size=24, color=color_texto, weight=BOLD).move_to(caja_cpu)
-        grupo_cpu = VGroup(caja_cpu, txt_cpu)
+        caja_cpu = RoundedRectangle(width=3.5, height=1.2, corner_radius=0.15, fill_color=color_cpu, fill_opacity=0.8, stroke_color=BLACK)
+        txt_cpu = Text("CPU", font=fuente, font_size=26, color=WHITE, weight=BOLD).move_to(caja_cpu)
+        grupo_cpu = VGroup(caja_cpu, txt_cpu).move_to([centro_x, 1.8, 0])
 
-        caja_mem = RoundedRectangle(width=5.0, height=1.2, corner_radius=0.1, fill_color=color_memoria, fill_opacity=1, stroke_width=2, stroke_color=color_texto)
-        caja_mem.move_to([centro_x, -1.8, 0])
-        txt_mem = Text("Memoria Principal", font=fuente, font_size=22, color=color_texto, weight=BOLD).move_to(caja_mem)
-        grupo_mem = VGroup(caja_mem, txt_mem)
+        caja_cache = RoundedRectangle(width=2.8, height=1.0, corner_radius=0.1, fill_color=color_cache, fill_opacity=0.9, stroke_color=BLACK)
+        txt_cache = Text("Caché", font=fuente, font_size=24, color=WHITE, weight=BOLD).move_to(caja_cache)
+        grupo_cache = VGroup(caja_cache, txt_cache).move_to([centro_x, 0, 0])
 
+        caja_mem = RoundedRectangle(width=4.8, height=1.2, corner_radius=0.1, fill_color=color_memoria, fill_opacity=0.8, stroke_color=BLACK)
+        txt_mem = Text("Memoria Principal", font=fuente, font_size=22, color=BLACK, weight=BOLD).move_to(caja_mem)
+        grupo_mem = VGroup(caja_mem, txt_mem).move_to([centro_x, -1.8, 0])
 
-        caja_cache = RoundedRectangle(width=2.5, height=1.0, corner_radius=0.1, fill_color=color_cache, fill_opacity=1, stroke_width=2, stroke_color=color_texto)
-        caja_cache.move_to([centro_x, -0.1, 0])
-        txt_cache = Text("Caché", font=fuente, font_size=24, color=color_texto, weight=BOLD).move_to(caja_cache)
-        grupo_cache = VGroup(caja_cache, txt_cache)
+        flecha_palabras = DoubleArrow(start=caja_cache.get_top(), end=caja_cpu.get_bottom(), buff=0.1, color=color_secundario, stroke_width=4)
+        txt_flecha_palabras = Text("Transferencia\nde Palabras", font=fuente, font_size=16, color=color_texto, line_spacing=0.8).next_to(flecha_palabras, RIGHT, buff=0.2)
 
-        flecha_bloques = DoubleArrow(start=caja_mem.get_top(), end=caja_cache.get_bottom(), buff=0.1, color=color_texto, stroke_width=3)
-        txt_flecha_bloques = Text("Transferencia\nde Bloques", font=fuente, font_size=16, color=color_secundario, line_spacing=0.8).next_to(flecha_bloques, RIGHT, buff=0.2)
-        
-        flecha_palabras = DoubleArrow(start=caja_cache.get_top(), end=caja_cpu.get_bottom(), buff=0.1, color=color_texto, stroke_width=3)
-        txt_flecha_palabras = Text("Transferencia\nde Palabras", font=fuente, font_size=16, color=color_secundario, line_spacing=0.8).next_to(flecha_palabras, RIGHT, buff=0.2)
+        flecha_bloques = DoubleArrow(start=caja_mem.get_top(), end=caja_cache.get_bottom(), buff=0.1, color=color_secundario, stroke_width=4)
+        txt_flecha_bloques = Text("Transferencia\nde Bloques", font=fuente, font_size=16, color=color_texto, line_spacing=0.8).next_to(flecha_bloques, RIGHT, buff=0.2)
+
+        # --- 5. SECUENCIA DE ANIMACIONES ---
+        self.play(Write(titulo), Create(linea_subtitulo), run_time=1)
+        self.play(
+            LaggedStart(*[FadeIn(texto, shift=RIGHT * 0.2) for texto in grupo_texto], lag_ratio=0.15),
+            run_time=2
+        )
+        self.next_slide() 
 
         self.play(FadeIn(grupo_cpu, shift=DOWN*0.2))
         self.play(FadeIn(grupo_mem, shift=UP*0.2))
         self.next_slide()
 
-        self.play(FadeIn(grupo_cache, scale=0.8))
+        self.play(FadeIn(grupo_cache, scale=0.8), run_time=1.2)
         self.next_slide()
 
         self.play(GrowArrow(flecha_bloques), FadeIn(txt_flecha_bloques))
         
-
-        bloque = VGroup(*[Square(side_length=0.15, fill_color=DARK_GRAY, fill_opacity=1) for _ in range(3)]).arrange(RIGHT, buff=0.05)
-        bloque.move_to(caja_mem.get_top())
+        bloque_datos = VGroup(
+            Text("1010", font="monospace", font_size=14, color=BLACK, weight=BOLD),
+            Text("1100", font="monospace", font_size=14, color=BLACK, weight=BOLD),
+            Text("0011", font="monospace", font_size=14, color=BLACK, weight=BOLD)
+        ).arrange(RIGHT, buff=0.1)
         
-        self.play(FadeIn(bloque))
-        self.play(bloque.animate.move_to(caja_cache.get_bottom()), run_time=1.5)
-        self.play(FadeOut(bloque))
+        fondo_bloque = BackgroundRectangle(bloque_datos, color=WHITE, fill_opacity=1, buff=0.1)
+        bloque_visual = VGroup(fondo_bloque, bloque_datos).move_to(caja_mem.get_center())
+        
+        # Animación de transferencia de bloque (Lenta)
+        self.play(FadeIn(bloque_visual, scale=0.5))
+        self.play(bloque_visual.animate.move_to(caja_cache.get_center()), run_time=2, rate_func=linear)
+        self.play(
+            FadeOut(bloque_visual, scale=0.5),
+            Indicate(caja_cache, color=WHITE, scale_factor=1.05),
+            run_time=0.8
+        )
         self.next_slide() 
 
         self.play(GrowArrow(flecha_palabras), FadeIn(txt_flecha_palabras))
 
-        palabra = Square(side_length=0.15, fill_color=BLACK, fill_opacity=1)
-        palabra.move_to(caja_cache.get_top())
+        palabra_visual = Text("1010", font="monospace", font_size=16, color=BLACK, weight=BOLD)
+        fondo_palabra = BackgroundRectangle(palabra_visual, color=WHITE, fill_opacity=1, buff=0.1)
+        palabra_completa = VGroup(fondo_palabra, palabra_visual).move_to(caja_cache.get_center())
         
-        self.play(FadeIn(palabra))
-        self.play(palabra.animate.move_to(caja_cpu.get_bottom()), run_time=0.6)
-        self.play(FadeOut(palabra))
+        # Animación de transferencia de palabra (Rápida)
+        self.play(FadeIn(palabra_completa, scale=0.5))
+        self.play(palabra_completa.animate.move_to(caja_cpu.get_center()), run_time=0.5)
+        self.play(
+            FadeOut(palabra_completa, scale=0.5),
+            Indicate(caja_cpu, color=GRAY_C, scale_factor=1.05),
+            run_time=0.6
+        )
         
         self.next_slide()
-        self.play(
-            *[FadeOut(mob) for mob in self.mobjects]
-        )
+        
+        # Limpieza usando tu función
+        self.limpiar_pantalla()
+
     def slide_ram(self):
+        # --- 1. PALETA DE COLORES B&W ---
         fuente = "sans-serif"
         color_texto = BLACK
-        color_secundario = DARK_GRAY
-        color_acento = GRAY
-        color_bg_suave = "#F4F4F4"
-        titulo = Text(
-            "RAM (Random Access Memory)", 
-            font=fuente, font_size=42, color=color_texto, weight=BOLD
-        ).to_edge(UP, buff=0.4)
+        color_secundario = GRAY_D
+        color_acento = BLACK
+        color_bg_suave = "#F4F4F4" # Gris muy claro para el fondo
         
-        linea_subtitulo = Line(LEFT, RIGHT, color=color_acento, stroke_width=2).scale(2.5).next_to(titulo, DOWN, buff=0.1)
+        # --- 2. TÍTULO CENTRADO ---
+        titulo = Text("RAM", font=fuente, font_size=40, color=color_texto, weight=BOLD)
+        titulo.to_edge(UP, buff=0.4)
+        
+        linea_subtitulo = Line(LEFT, RIGHT, color=color_acento, stroke_width=3).scale(2)
+        linea_subtitulo.next_to(titulo, DOWN, buff=0.1)
 
-        self.play(Write(titulo))
-        self.play(Create(linea_subtitulo))
-        self.next_slide() 
-
-        viñetas = [
-            "  - Es la memoria principal del sistema.",
-            "  - Mayor capacidad que la caché,",
-            "    pero con una velocidad menor.",
-            "  - Almacena los datos e instrucciones",
-            "    que la CPU utiliza en ese momento.",
-            "  - Acceso directo a cualquier dirección."
+        # --- 3. VIÑETAS (Alineadas a la izquierda) ---
+        viñetas_textos = [
+            "Es la memoria principal del sistema.",
+            "Mayor capacidad que la caché,\npero con una velocidad menor.",
+            "Almacena los datos e instrucciones\nque la CPU utiliza en ese momento.",
+            "Acceso directo a cualquier dirección."
         ]
         
         grupo_texto = VGroup(
-            *[Text(linea, font=fuente, font_size=20, color=color_secundario) for linea in viñetas]
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.25)
-
-        linea_acento_texto = Line(
-            grupo_texto.get_corner(UL) + UP*0.1, 
-            grupo_texto.get_corner(DL) + DOWN*0.1, 
-            color=color_acento, stroke_width=4
-        )
-        grupo_izquierdo = VGroup(linea_acento_texto, grupo_texto).to_edge(LEFT, buff=0.6).shift(DOWN * 0.2)
-
-        self.play(Create(linea_acento_texto))
-        self.play(LaggedStart(*[FadeIn(texto, shift=RIGHT * 0.1) for texto in grupo_texto], lag_ratio=0.15))
-        self.next_slide() 
-
-        centro_diag = RIGHT * 3.5 + DOWN * 0.3
+            *[VGroup(Dot(radius=0.05, color=color_acento), Text(linea, font=fuente, font_size=20, color=color_secundario, line_spacing=0.8)).arrange(RIGHT, buff=0.2) 
+              for linea in viñetas_textos]
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.4)
         
+        grupo_texto.to_edge(LEFT, buff=0.8).shift(DOWN * 0.2)
+
+        # --- 4. ESQUEMA DE LA RAM (Lado Derecho) ---
+        centro_diag = RIGHT * 3.4 + DOWN * 0.3
+        
+        # Fondo ampliado para contener todo el circuito y buses
         fondo_circuito = RoundedRectangle(
-            width=5.5, height=5.5, corner_radius=0.2,
-            fill_color=color_bg_suave, fill_opacity=0.6, 
-            stroke_width=2, stroke_color=GRAY
+            width=6.7, height=6.0, corner_radius=0.3,
+            fill_color=color_bg_suave, fill_opacity=1, 
+            stroke_width=1.5, stroke_color=GRAY_C
         ).move_to(centro_diag)
 
+        # Caja principal de la RAM
         caja_ram = RoundedRectangle(
-            width=3.2, height=4.6, corner_radius=0.1,
+            width=3.4, height=4.4, corner_radius=0.15,
             fill_color=WHITE, fill_opacity=1, 
-            stroke_width=3, stroke_color=color_texto
+            stroke_width=3, stroke_color=BLACK
         ).move_to(centro_diag)
         
-        txt_ram = Text("RAM", font=fuente, font_size=22, color=color_texto, weight=BOLD).move_to(caja_ram.get_top() + DOWN * 0.4)
+        txt_ram = Text("RAM", font=fuente, font_size=24, color=BLACK, weight=BOLD).next_to(caja_ram.get_top(), DOWN, buff=0.15)
         
-        reloj = Triangle(color=color_texto, fill_opacity=0, stroke_width=2)
-        reloj.stretch_to_fit_width(0.3)
-        reloj.stretch_to_fit_height(0.2) 
-        reloj.next_to(caja_ram.get_bottom(), UP, buff=0)
+        reloj = Triangle(color=BLACK, fill_opacity=0, stroke_width=2).scale(0.15)
+        reloj.move_to(caja_ram.get_bottom(), aligned_edge=DOWN)
 
+        # Caja Lógica (Direct Access Logic) dentro de la RAM en la parte inferior
+        caja_logica = Rectangle(width=2.8, height=0.6, fill_color=WHITE, fill_opacity=1, stroke_width=2, stroke_color=BLACK)
+        caja_logica.move_to(caja_ram.get_bottom() + UP * 0.5)
+        txt_logica = Text("Direct Access Logic", font=fuente, font_size=14, color=BLACK).move_to(caja_logica)
+        grupo_logica = VGroup(caja_logica, txt_logica)
 
+        # Registros internos de la RAM
         def crear_registro(y_offset, texto_num):
-            caja_reg = Rectangle(width=2.0, height=0.5, stroke_width=2, stroke_color=color_texto).move_to(caja_ram.get_center() + UP * y_offset)
-            txt_reg = Text("Register", font=fuente, font_size=16, color=color_texto).move_to(caja_reg)
-            num_reg = Text(texto_num, font=fuente, font_size=16, color=color_texto).next_to(caja_reg, RIGHT, buff=0.2)
+            caja_reg = Rectangle(width=2.2, height=0.45, stroke_width=2, fill_color=WHITE, fill_opacity=1, stroke_color=BLACK)
+            caja_reg.move_to(caja_ram.get_center() + UP * y_offset)
+            txt_reg = Text("Register", font=fuente, font_size=16, color=BLACK).move_to(caja_reg)
+            num_reg = Text(texto_num, font=fuente, font_size=14, color=BLACK).next_to(caja_reg, RIGHT, buff=0.15)
             return VGroup(caja_reg, txt_reg, num_reg)
 
         reg_0 = crear_registro(1.1, "0")
-        reg_1 = crear_registro(0.4, "1")
-        puntos = Text("...", font=fuente, font_size=24, color=color_texto).move_to(caja_ram.get_center() + DOWN * 0.3)
-        reg_n = crear_registro(-1.0, "n-1")
+        reg_1 = crear_registro(0.5, "1")
+        puntos = Text("...", font=fuente, font_size=24, color=BLACK).move_to(caja_ram.get_center() + DOWN * 0.1)
+        reg_n = crear_registro(-0.6, "n-1")
 
         grupo_registros = VGroup(reg_0, reg_1, puntos, reg_n)
 
+        # Buses de conexión ajustados para no salirse
+        def crear_bus(start, end, label_text, width_text):
+            flecha = Arrow(start=start, end=end, buff=0, color=BLACK, stroke_width=4, max_tip_length_to_length_ratio=0.15)
+            label = Text(label_text, font=fuente, font_size=18, color=BLACK).next_to(flecha, UP, buff=0.1)
+            slash = Line(DL, UR, color=BLACK, stroke_width=2).scale(0.15).move_to(flecha.get_center())
+            width_lbl = Text(width_text, font=fuente, font_size=14, color=BLACK).next_to(slash, DOWN, buff=0.05).shift(RIGHT*0.1)
+            return VGroup(flecha, label, slash, width_lbl), flecha
 
-        caja_logica = Rectangle(width=2.2, height=0.7, stroke_width=2, stroke_color=color_texto).move_to(caja_ram.get_bottom() + UP * 0.6)
-        
-        txt_logica = VGroup(
-            Text("Direct Access", font=fuente, font_size=14, color=color_texto),
-            Text("Logic", font=fuente, font_size=14, color=color_texto)
-        ).arrange(DOWN, buff=0.05).move_to(caja_logica)
-        
-        grupo_logica = VGroup(caja_logica, txt_logica)
+        # Posiciones de los buses
+        y_addr = caja_logica.get_center()[1]
+        grupo_addr, flecha_addr = crear_bus(caja_ram.get_left() + LEFT * 1.3 + UP * y_addr, caja_ram.get_left() + UP * y_addr, "address", "k")
 
-        def crear_bus(start, end, label_text, width_text, up_shift=0.12, left_shift=0, right_shift=0):
-            flecha = Arrow(start=start, end=end, buff=0, color=color_texto, stroke_width=3, max_tip_length_to_length_ratio=0.15)
-            label = Text(label_text, font=fuente, font_size=18, color=color_texto).next_to(flecha, UP, buff=up_shift).shift(LEFT*left_shift + RIGHT*right_shift)
-            slash = Line(DOWN, UP, color=color_acento, stroke_width=2).scale(0.2).rotate(PI/4).move_to(flecha.get_center())
-            width_lbl = Text(width_text, font=fuente, font_size=14, color=color_acento).next_to(slash, DOWN, buff=0.1)
-            return VGroup(flecha, label, slash, width_lbl)
+        y_in = reg_1.get_center()[1] # Apunta hacia el área de registros
+        grupo_in, flecha_in = crear_bus(caja_ram.get_left() + LEFT * 1.3 + UP * y_in, caja_ram.get_left() + UP * y_in, "in", "w")
 
-        y_in = caja_ram.get_center()[1] + 0.6
-        bus_in = crear_bus(caja_ram.get_left() + LEFT * 1.2 + UP * y_in, caja_ram.get_left() + UP * y_in, "in", "w", left_shift=0.3)
+        y_out = reg_n.get_center()[1] + 0.2
+        grupo_out, flecha_out = crear_bus(caja_ram.get_right() + UP * y_out, caja_ram.get_right() + RIGHT * 1.3 + UP * y_out, "out", "w")
 
-        y_addr = caja_ram.get_center()[1] - 0.6
-        bus_addr = crear_bus(caja_ram.get_left() + LEFT * 1.2 + UP * y_addr, caja_ram.get_left() + UP * y_addr, "address", "k", left_shift=0.3)
-
-        bus_out = crear_bus(caja_ram.get_right(), caja_ram.get_right() + RIGHT * 1.2, "out", "w", right_shift=0.3)
-
-        flecha_load = Arrow(start=caja_ram.get_top() + UP * 0.8, end=caja_ram.get_top(), buff=0, color=GRAY, stroke_width=3, max_tip_length_to_length_ratio=0.15)
-        label_load = Text("load", font=fuente, font_size=18, color=GRAY).next_to(flecha_load, UP, buff=0.1)
+        flecha_load = Arrow(start=caja_ram.get_top() + UP * 0.6, end=caja_ram.get_top(), buff=0, color=GRAY_D, stroke_width=3)
+        label_load = Text("load", font=fuente, font_size=16, color=GRAY_D).next_to(flecha_load, RIGHT, buff=0.1)
         grupo_load = VGroup(flecha_load, label_load)
 
-        self.play(FadeIn(fondo_circuito, shift=UP * 0.2))
-        self.play(Create(caja_ram), Write(txt_ram), Create(reloj))
-        self.next_slide()
-        self.play(LaggedStart(*[FadeIn(mob, shift=DOWN*0.1) for mob in [reg_0, reg_1, puntos, reg_n]], lag_ratio=0.2))
-        self.next_slide() 
-        self.play(Create(caja_logica), Write(txt_logica))
-        self.play(FadeIn(bus_addr, shift=RIGHT*0.2))
-        self.next_slide() 
+        # --- 5. SECUENCIA DE ANIMACIONES ---
+        
+        # Título y Viñetas
+        self.play(Write(titulo), Create(linea_subtitulo), run_time=1)
         self.play(
-            FadeIn(bus_in, shift=RIGHT*0.2),
-            FadeIn(bus_out, shift=LEFT*0.2),
+            LaggedStart(*[FadeIn(texto, shift=RIGHT * 0.2) for texto in grupo_texto], lag_ratio=0.15),
+            run_time=2
+        )
+        self.next_slide() 
+
+        # Hardware Base
+        self.play(FadeIn(fondo_circuito, shift=UP * 0.1))
+        self.play(Create(caja_ram), Write(txt_ram), Create(reloj))
+        self.play(Create(grupo_logica))
+        self.play(LaggedStart(*[FadeIn(mob, shift=DOWN*0.1) for mob in [reg_0, reg_1, puntos, reg_n]], lag_ratio=0.15))
+        self.next_slide() 
+        
+        # Conexiones (Buses)
+        self.play(
+            FadeIn(grupo_addr, shift=RIGHT*0.2),
+            FadeIn(grupo_in, shift=RIGHT*0.2),
+            FadeIn(grupo_out, shift=LEFT*0.2),
             FadeIn(grupo_load, shift=DOWN*0.2)
         )
         self.next_slide() 
 
+        # Animación Dinámica: OPERACIÓN DE ESCRITURA (WRITE)
+        # 1. Llega la dirección de memoria
+        addr_dato = Text("0...01", font="monospace", font_size=16, color=BLACK, weight=BOLD).move_to(flecha_addr.get_start() + UP*0.3)
+        self.play(FadeIn(addr_dato))
+        self.play(addr_dato.animate.move_to(caja_logica.get_center()), run_time=1)
+        
+        # 2. La lógica selecciona el registro 1
         self.play(
-            *[FadeOut(mob) for mob in self.mobjects]
+            FadeOut(addr_dato, scale=0.5), 
+            Indicate(caja_logica, color=GRAY_D, scale_factor=1.05), 
+            run_time=0.6
         )
+        self.play(reg_1[0].animate.set_fill(GRAY_C, opacity=1), run_time=0.4)
+        
+        # 3. Entra el dato a guardar
+        in_dato = Text("1011...0", font="monospace", font_size=16, color=BLACK, weight=BOLD).move_to(flecha_in.get_start() + UP*0.3)
+        self.play(FadeIn(in_dato))
+        self.play(in_dato.animate.move_to(reg_1.get_center()), run_time=1)
+        
+        # 4. Señal de Load activa y guarda
+        self.play(flecha_load.animate.set_color(BLACK), label_load.animate.set_color(BLACK), run_time=0.3)
+        self.play(
+            FadeOut(in_dato, scale=0.5), 
+            Indicate(reg_1[0], color=WHITE, scale_factor=1.05), 
+            run_time=0.8
+        )
+        self.next_slide()
+
+        # Animación Dinámica: OPERACIÓN DE LECTURA (READ)
+        # Sale el dato del registro seleccionado
+        out_dato = Text("1011...0", font="monospace", font_size=16, color=BLACK, weight=BOLD).move_to(reg_1.get_center())
+        self.play(FadeIn(out_dato, scale=0.5))
+        self.play(out_dato.animate.move_to(flecha_out.get_end() + RIGHT*0.2), run_time=1.2)
+        
+        # Limpieza de la animación interna
+        self.play(
+            FadeOut(out_dato, shift=RIGHT*0.2),
+            reg_1[0].animate.set_fill(WHITE, opacity=1), # El registro vuelve a su estado normal
+            flecha_load.animate.set_color(GRAY_D),
+            label_load.animate.set_color(GRAY_D)
+        )
+        self.next_slide()
+
+        # Limpieza final de la pantalla
+        self.limpiar_pantalla()
+
     def slide_ram_escalabilidad(self):
+        # --- 1. PALETA DE COLORES B&W ---
         fuente = "sans-serif"
         color_texto = BLACK
-        color_secundario = DARK_GRAY
-        color_acento = GRAY
+        color_secundario = GRAY_D
+        color_acento = BLACK
         
-        titulo = Text(
-            "Escalabilidad: Construyendo RAMs más grandes", 
-            font=fuente, font_size=38, color=color_texto, weight=BOLD
-        ).to_edge(UP, buff=0.4)
+        # --- 2. TÍTULO CENTRADO ---
+        titulo = Text("Escalabilidad de la RAM", font=fuente, font_size=36, color=color_texto, weight=BOLD)
+        titulo.to_edge(UP, buff=0.4)
         
-        linea_subtitulo = Line(LEFT, RIGHT, color=color_acento, stroke_width=2).scale(3).next_to(titulo, DOWN, buff=0.1)
+        linea_subtitulo = Line(LEFT, RIGHT, color=color_acento, stroke_width=3).scale(4.5)
+        linea_subtitulo.next_to(titulo, DOWN, buff=0.1)
 
-        self.play(Write(titulo))
-        self.play(Create(linea_subtitulo))
-        self.next_slide() 
+        # --- 3. CONSTRUCCIÓN RAM (Lado Izquierdo) ---
+        caja_base = RoundedRectangle(width=3.2, height=0.8, corner_radius=0.15, fill_color=WHITE, fill_opacity=1, stroke_color=BLACK, stroke_width=2)
+        txt_base = Text("RAM8", font=fuente, font_size=20, color=BLACK, weight=BOLD).move_to(caja_base)
+        ram8_base = VGroup(caja_base, txt_base).move_to(LEFT * 3.5 + DOWN * 0.2)
 
-        ram8_base = VGroup(
-            RoundedRectangle(width=2.5, height=0.6, corner_radius=0.1, fill_color="#E0E0E0", fill_opacity=1, stroke_color=color_texto),
-            Text("RAM8", font=fuente, font_size=18, color=color_texto, weight=BOLD)
-        ).shift(LEFT * 3)
-
-        self.play(FadeIn(ram8_base, shift=UP*0.2))
-        self.next_slide() 
-
+        # Creación de los 8 chips apilados
         ram8_blocks = VGroup(*[
             VGroup(
-                RoundedRectangle(width=2.5, height=0.4, corner_radius=0.1, fill_color="#E0E0E0", fill_opacity=1, stroke_color=color_texto),
-                Text(f"RAM8 (Chip {i})", font=fuente, font_size=14, color=color_secundario)
+                RoundedRectangle(width=3.2, height=0.45, corner_radius=0.1, fill_color=WHITE, fill_opacity=1, stroke_color=BLACK, stroke_width=1.5),
+                Text(f"RAM8 (Chip {i})", font=fuente, font_size=16, color=BLACK)
             ) for i in range(8)
-        ]).arrange(DOWN, buff=0.1).shift(LEFT * 3 + DOWN * 0.2)
+        ]).arrange(DOWN, buff=0.1).move_to(LEFT * 3.5 + DOWN * 0.2)
 
+        # Contenedor RAM64
+        caja_ram64 = SurroundingRectangle(ram8_blocks, color=BLACK, stroke_width=3, buff=0.2, corner_radius=0.15)
+        txt_ram64 = Text("RAM64", font=fuente, font_size=24, color=BLACK, weight=BOLD).next_to(caja_ram64, UP, buff=0.2)
 
-        self.play(Transform(ram8_base, ram8_blocks), run_time=1.5)
-        self.next_slide()
-   
-        caja_ram64 = SurroundingRectangle(ram8_blocks, color=color_texto, stroke_width=3, buff=0.2)
-        txt_ram64 = Text("RAM64", font=fuente, font_size=24, color=color_texto, weight=BOLD).next_to(caja_ram64, UP, buff=0.2)
-        
-        self.play(Create(caja_ram64), Write(txt_ram64))
-        self.next_slide()
-
+        # --- 4. TABLA Y EXPLICACIÓN (Lado Derecho) ---
         tabla = Table(
             [["RAM8", "8", "3"],
              ["RAM64", "64", "6"],
              ["RAM512", "512", "9"],
              ["RAM4K", "4096", "12"],
              ["RAM16K", "16384", "14"]],
-            col_labels=[Text("Chip Name", font=fuente, font_size=24), 
-                        Text("n (Registros)", font=fuente, font_size=24), 
-                        Text("k (Bits Address)", font=fuente, font_size=24)],
+            col_labels=[
+                Text("Chip Name", font=fuente, font_size=24), 
+                Text("n (Registros)", font=fuente, font_size=24), 
+                Text("k (Bits Address)", font=fuente, font_size=24)
+            ],
             include_outer_lines=True,
-            line_config={"stroke_width": 2, "color": color_secundario}
-        ).scale(0.35).to_edge(RIGHT, buff=0.8).shift(DOWN * 0.2)
+            line_config={"stroke_width": 2, "color": BLACK}
+        ).scale(0.38).move_to(RIGHT * 3.2 + UP * 0.5)
 
+        # Estilizar el interior de la tabla
         tabla.get_col_labels().set_color(BLACK)
         for elem in tabla.get_entries():
-            elem.set_color(DARK_GRAY)
+            elem.set_color(GRAY_D)
+
+        explicacion_k = VGroup(
+            Text("Al multiplicar n x 8", font=fuente, font_size=20, color=BLACK, weight=BOLD),
+            Text("sumamos 3 bits a k", font=fuente, font_size=20, color=GRAY_D)
+        ).arrange(DOWN, buff=0.1).next_to(tabla, DOWN, buff=0.6)
+        
+        flecha_explicacion = Arrow(start=explicacion_k.get_top(), end=tabla.get_bottom(), buff=0.15, color=BLACK, stroke_width=3)
+
+        # --- 5. SECUENCIA DE ANIMACIONES ---
+        self.play(Write(titulo), Create(linea_subtitulo), run_time=1)
+        self.next_slide() 
+
+        self.play(FadeIn(ram8_base, shift=UP*0.2))
+        self.next_slide() 
+
+        # Cambio visual del bloque único a los 8 bloques
+        self.play(ReplacementTransform(ram8_base, ram8_blocks), run_time=1.5)
+        self.next_slide()
+   
+        self.play(Create(caja_ram64), Write(txt_ram64))
+        self.next_slide()
 
         self.play(FadeIn(tabla, shift=LEFT*0.3))
         self.next_slide()
 
-        explicacion_k = VGroup(
-            Text("Al multiplicar n x 8", font=fuente, font_size=18, color=color_texto, weight=BOLD),
-            Text("sumamos 3 bits a k", font=fuente, font_size=18, color=color_acento)
-        ).arrange(DOWN, buff=0.1).next_to(tabla, DOWN, buff=0.4)
-        
-        flecha_explicacion = Arrow(start=explicacion_k.get_top(), end=tabla.get_bottom(), buff=0.1, color=color_acento)
-
-        self.play(FadeIn(explicacion_k), GrowArrow(flecha_explicacion))
+        self.play(FadeIn(explicacion_k, shift=UP*0.2), GrowArrow(flecha_explicacion))
         self.next_slide()
 
-        self.play(
-            *[FadeOut(mob) for mob in self.mobjects]
-        )
-    def slide_memory_standards(self):
-        titulo, linea = self.crear_titulo("Estándares de memoria", palabra_clave="memoria")
-        self.play(Write(titulo), Create(linea))
+        # Limpieza final de la pantalla usando tu método
+        self.limpiar_pantalla()
 
+    def slide_memory_standards(self):
+        # --- 1. PALETA DE COLORES B&W ---
+        fuente = "sans-serif"
+        color_texto = BLACK
+        color_secundario = GRAY_D
+        color_acento = BLACK
+        
+        # --- 2. TÍTULO CENTRADO ---
+        titulo = Text("ESTÁNDARES DE MEMORIA", font=fuente, font_size=38, color=color_texto, weight=BOLD)
+        titulo.to_edge(UP, buff=0.4)
+        
+        linea_subtitulo = Line(LEFT, RIGHT, color=color_acento, stroke_width=3).scale(3.5)
+        linea_subtitulo.next_to(titulo, DOWN, buff=0.1)
+
+        self.play(Write(titulo), Create(linea_subtitulo))
+        self.next_slide()
+
+        # --- 3. DATOS DE LA TABLA ---
         encabezados = ["Nivel", "Nombre", "Tamaño", "Hardware", "T. Acceso", "Ancho Banda", "Gestión", "Respaldo"]
         datos = [
             ["1", "Registros", "< 1 KB", "Multi-puerto", "0.25-0.5 ns", "20-100k MB/s", "Compilador", "Caché"],
@@ -955,19 +1030,20 @@ class Presentacion(Slide):
         def crear_fila_cuadritos(textos, es_encabezado=False):
             fila = VGroup()
             for txt in textos:
-                color_fondo = DARK_GRAY if es_encabezado else LIGHT_GRAY
-                color_texto = WHITE if es_encabezado else BLACK
-                opacidad = 1 if es_encabezado else 0.3
+                color_fondo = BLACK if es_encabezado else WHITE
+                color_txt = WHITE if es_encabezado else BLACK
                 peso = BOLD if es_encabezado else NORMAL
                 
-                caja = RoundedRectangle(width=1.62, height=0.75, corner_radius=0.1, 
-                                        fill_color=color_fondo, fill_opacity=opacidad, 
-                                        stroke_color=GRAY, stroke_width=2)
+                caja = RoundedRectangle(
+                    width=1.55, height=0.65, corner_radius=0.1, 
+                    fill_color=color_fondo, fill_opacity=1, 
+                    stroke_color=BLACK, stroke_width=2
+                )
                 
                 font_s = 14 if es_encabezado else 13
                 if len(txt) >= 10: font_s = 11  
                 
-                texto = Text(txt, font=FUENTE, font_size=font_s, color=color_texto, weight=peso)
+                texto = Text(txt, font=fuente, font_size=font_s, color=color_txt, weight=peso)
                 texto.move_to(caja.get_center())
                 
                 cuadrito = VGroup(caja, texto)
@@ -976,6 +1052,7 @@ class Presentacion(Slide):
             fila.arrange(RIGHT, buff=0.08) 
             return fila
 
+        # Construcción de la cuadrícula completa
         cuadricula_final = VGroup()
         
         fila_headers = crear_fila_cuadritos(encabezados, es_encabezado=True)
@@ -984,53 +1061,61 @@ class Presentacion(Slide):
         for fila_datos in datos:
             cuadricula_final.add(crear_fila_cuadritos(fila_datos, es_encabezado=False))
             
-        cuadricula_final.arrange(DOWN, buff=0.1).shift(DOWN * 0.1)
+        # Centrar la tabla en el espacio disponible
+        cuadricula_final.arrange(DOWN, buff=0.1).move_to(DOWN * 0.2)
         
         f_headers = cuadricula_final[0]
         f_datos_finales = cuadricula_final[1:]
 
+        # --- 4. SECUENCIA DE ANIMACIONES ---
         self.play(FadeIn(f_headers, shift=DOWN*0.2))
         self.next_slide() 
         
         for i, fila_data in enumerate(datos):
-
             fila_temp = crear_fila_cuadritos(fila_data, es_encabezado=False)
-            fila_temp.move_to(DOWN * 1.0) 
+            fila_temp.move_to(DOWN * 0.8)
             
-            lbl_temp = Text(f"Nivel {fila_data[0]}: {fila_data[1]}", font=FUENTE, font_size=20, weight=BOLD, color=DARK_GRAY)
+            lbl_temp = Text(f"Nivel {fila_data[0]}: {fila_data[1]}", font=fuente, font_size=20, weight=BOLD, color=GRAY_D)
             lbl_temp.next_to(fila_temp, UP, buff=0.3)
             grupo_temp = VGroup(lbl_temp, fila_temp)
 
-            self.play(FadeIn(lbl_temp), LaggedStart(*[FadeIn(c, shift=UP*0.2) for c in fila_temp], lag_ratio=0.05))
-            
+            self.play(
+                FadeIn(lbl_temp, shift=UP*0.1), 
+                LaggedStart(*[FadeIn(c, shift=UP*0.2) for c in fila_temp], lag_ratio=0.05)
+            )
             self.next_slide()
-            
             self.play(FadeOut(grupo_temp, shift=UP*0.2))
 
-        self.play(LaggedStart(*[FadeIn(f, shift=DOWN*0.2) for f in f_datos_finales], lag_ratio=0.15))
+        self.play(LaggedStart(*[FadeIn(f, shift=DOWN*0.1) for f in f_datos_finales], lag_ratio=0.15))
         self.next_slide() 
 
+        # --- 5. FLECHAS DE TENDENCIA ---
+        # Flecha inferior (Capacidad) - Bajada a DOWN * 0.8
         flecha_cap = Arrow(
-            start=cuadricula_final.get_corner(DL) + DOWN * 0.4 + RIGHT * 2, 
-            end=cuadricula_final.get_corner(DR) + DOWN * 0.4, 
-            color=BLACK, stroke_width=4, tip_length=0.2
+            start=cuadricula_final.get_corner(DL) + DOWN * 0.8 + RIGHT * 2, 
+            end=cuadricula_final.get_corner(DR) + DOWN * 0.8, 
+            color=BLACK, stroke_width=4, max_tip_length_to_length_ratio=0.1
         )
-        label_cap = Text("+ Capacidad de Almacenamiento", font=FUENTE, font_size=14, color=BLACK, weight=BOLD).next_to(flecha_cap, UP, buff=0.1)
+        label_cap = Text("+ Capacidad de Almacenamiento", font=fuente, font_size=16, color=BLACK, weight=BOLD).next_to(flecha_cap, UP, buff=0.1)
 
+        # Flecha superior (Velocidad/Costo) - Subida a UP * 0.8
         flecha_vel = Arrow(
-            start=cuadricula_final.get_corner(UR) + UP * 0.4 + LEFT * 2, 
-            end=cuadricula_final.get_corner(UL) + UP * 0.4, 
-            color=BLACK, stroke_width=4, tip_length=0.2
+            start=cuadricula_final.get_corner(UR) + UP * 0.8 + LEFT * 2, 
+            end=cuadricula_final.get_corner(UL) + UP * 0.8, 
+            color=BLACK, stroke_width=4, max_tip_length_to_length_ratio=0.1
         )
-        label_vel = Text("+ Velocidad y Costo por Bit", font=FUENTE, font_size=14, color=BLACK, weight=BOLD).next_to(flecha_vel, DOWN, buff=0.1)
+        label_vel = Text("+ Velocidad y Costo por Bit", font=fuente, font_size=16, color=BLACK, weight=BOLD).next_to(flecha_vel, DOWN, buff=0.1)
 
         self.play(
-            GrowArrow(flecha_cap), FadeIn(label_cap),
-            GrowArrow(flecha_vel), FadeIn(label_vel)
+            GrowArrow(flecha_cap), FadeIn(label_cap, shift=UP*0.1),
+            GrowArrow(flecha_vel), FadeIn(label_vel, shift=DOWN*0.1)
         )
         
         self.next_slide() 
+        
+        # Limpieza final
         self.limpiar_pantalla()
+
     def slide_caracteristicas(self):
         titulo, linea = self.crear_titulo("Características de la jerarquía", palabra_clave="Características", color_clave=BLACK)
         self.play(Write(titulo), Create(linea))
@@ -1299,32 +1384,100 @@ class Presentacion(Slide):
         self.limpiar_pantalla()
 
     def slide_despedida(self):
-        texto_muchas = Text("¡MUCHAS", font_size=72, weight=BOLD, slant=ITALIC, color=BLACK)
-        texto_gracias = Text("Gracias!", font_size=72, color=BLACK)
-        
-        texto_muchas.shift(UP * 2.5 + LEFT * 1.5)
-        texto_gracias.next_to(texto_muchas, DOWN, aligned_edge=RIGHT, buff=0.1).shift(RIGHT * 1.5)
-        
-        grupo_texto_principal = VGroup(texto_muchas, texto_gracias)
+        # --- CONFIGURACIÓN GLOBAL B&W ---
+        color_texto_principal = BLACK
+        color_acento = GRAY 
 
-        qr_image = ImageMobject("assets\memoria_en_computador_moderno_qr.png") 
+        # --- 1. TÍTULO CENTRADO (EN MAYÚSCULAS) ---
+        texto_muchas = Text("¡MUCHAS", font_size=72, weight=BOLD, slant=ITALIC, color=color_texto_principal)
+        texto_gracias = Text("GRACIAS!", font_size=72, color=color_texto_principal)
+        
+        titulo = VGroup(texto_muchas, texto_gracias).arrange(RIGHT, buff=0.4)
+        titulo.to_edge(UP, buff=0.8)
+
+        # --- 2. CÓDIGO QR Y TEXTO GITHUB (A la izquierda) ---
+        qr_image = ImageMobject("assets/memoria_en_computador_moderno_qr.png") 
         qr_image.height = 3.5 
-        marco_qr = SurroundingRectangle(qr_image, color=BLACK, stroke_width=2, buff=0.1)
+            
+        marco_qr = SurroundingRectangle(qr_image, color=color_texto_principal, stroke_width=3, corner_radius=0.1, buff=0.15)
+        grupo_qr = Group(marco_qr, qr_image)
         
-        grupo_qr_completo = Group(marco_qr, qr_image)
-        grupo_qr_completo.next_to(DOWN, buff=0.8)
+        # Nuevo texto del repositorio
+        texto_repo = Text("REPOSITORIO GITHUB", font_size=24, color=color_texto_principal, weight=BOLD)
+        texto_repo.next_to(grupo_qr, UP, buff=0.3)
+        
+        # Agrupamos todo el bloque izquierdo para posicionarlo junto
+        grupo_izquierdo = Group(texto_repo, grupo_qr)
+        grupo_izquierdo.next_to(titulo, DOWN, buff=1.2).to_edge(LEFT, buff=2)
 
-        contenido_total = Group(grupo_texto_principal, grupo_qr_completo)
-        contenido_total.move_to(ORIGIN)
+        # --- 3. DISEÑO DE JERARQUÍA EN B&W (A la derecha) ---
+        plato1 = Ellipse(width=3, height=0.8, color=GRAY_E, fill_opacity=0.8) 
+        plato2 = Ellipse(width=3, height=0.8, color=GRAY_D, fill_opacity=0.9).shift(UP * 0.2)
+        plato3 = Ellipse(width=3, height=0.8, color=GRAY_C, fill_opacity=1.0).shift(UP * 0.4) 
+        
+        grupo_platos = VGroup(plato1, plato2, plato3)
+        txt_disco = Text("Disco Magnético", font_size=20, color=BLACK, weight=BOLD).next_to(grupo_platos, DOWN)
+        disco_completo = VGroup(grupo_platos, txt_disco)
 
-        self.play(Write(texto_muchas), run_time=1)
-        self.play(FadeIn(texto_gracias, shift=UP * 0.5), run_time=1)
+        bloque_ram = RoundedRectangle(corner_radius=0.15, width=2.5, height=0.8, color=GRAY_D, fill_opacity=0.8)
+        txt_ram = Text("RAM", font_size=22, color=WHITE, weight=BOLD).move_to(bloque_ram)
+        ram_completo = VGroup(bloque_ram, txt_ram)
+
+        bloque_cache = RoundedRectangle(corner_radius=0.1, width=1.8, height=0.6, color=BLACK, fill_opacity=1.0)
+        txt_cache = Text("CPU", font_size=20, color=WHITE, weight=BOLD).move_to(bloque_cache)
+        cache_completo = VGroup(bloque_cache, txt_cache)
+
+        jerarquia = VGroup(disco_completo, ram_completo, cache_completo).arrange(UP, buff=0.8)
+        jerarquia.next_to(titulo, DOWN, buff=0.8).to_edge(RIGHT, buff=2.5)
+
+        linea_disco_ram = Line(disco_completo.get_top(), ram_completo.get_bottom(), color=color_acento, stroke_width=2)
+        linea_ram_cache = Line(ram_completo.get_top(), cache_completo.get_bottom(), color=color_acento, stroke_width=2)
+
+        # --- 4. PREPARACIÓN DEL DATO ANIMADO B&W ---
+        dato_nucleo = Dot(color=BLACK, radius=0.1)
+        dato_brillo = Dot(color=GRAY_B, radius=0.25, fill_opacity=0.4)
+        dato = VGroup(dato_brillo, dato_nucleo)
+        dato.move_to(disco_completo.get_center())
+
+        estela = TracedPath(dato_nucleo.get_center, stroke_color=BLACK, stroke_width=4, dissipating_time=0.4)
+
+        # --- 5. SECUENCIA DE ANIMACIONES ---
+        self.play(Write(titulo), run_time=1.2)
+        
+        # Animación del QR incluyendo el nuevo texto
+        self.play(
+            Write(texto_repo),
+            FadeIn(qr_image, shift=UP * 0.3),
+            Create(marco_qr),
+            run_time=1
+        )
         
         self.play(
-            FadeIn(qr_image, shift=UP * 0.2),
-            Create(marco_qr),
-            run_time=1.5
+            AnimationGroup(
+                Create(disco_completo),
+                Create(linea_disco_ram),
+                Create(ram_completo),
+                Create(linea_ram_cache),
+                Create(cache_completo),
+                lag_ratio=0.3
+            ),
+            run_time=2.5
         )
+
+        self.add(estela)
+        self.play(FadeIn(dato, scale=0.5))
+        
+        self.play(dato.animate.move_to(ram_completo.get_center()), run_time=1)
+        self.play(dato.animate.move_to(cache_completo.get_center()), run_time=0.8)
+        
+        self.play(
+            Flash(cache_completo, color=BLACK, line_length=0.4, num_lines=12, flash_radius=1.2),
+            FadeOut(dato),
+            run_time=0.8
+        )
+        
+        self.wait(0.5)
+        self.remove(estela)
 
         self.next_slide()
         self.limpiar_pantalla()
@@ -1380,137 +1533,313 @@ class Presentacion(Slide):
         self.next_slide()
         self.limpiar_pantalla()
         
-    def memoria_secundaria1(self):
-        titulo = Text("Almacenamiento secundario", font_size=48, color=BLACK)
-        titulo.to_edge(UP, buff=0.5)
+    def almacenamiento_secundario(self):
+        # --- 1. PALETA DE COLORES Y FUENTE B&W ---
+        fuente = "sans-serif"
+        color_texto = BLACK
+        color_secundario = DARK_GRAY
+        
+        # --- 2. TÍTULO CENTRADO (Sin ser full mayúsculas) ---
+        titulo = Text("Almacenamiento secundario", font=fuente, font_size=42, color=color_texto, weight=BOLD)
+        titulo.to_edge(UP, buff=0.4)
+        
+        linea_subtitulo = Line(LEFT, RIGHT, color=BLACK, stroke_width=3).scale(3.5)
+        linea_subtitulo.next_to(titulo, DOWN, buff=0.1)
 
-        contenido = VGroup(
-            Text("Es una unidad de memoria \"no volátil\"\nla cual posee una capacidad de\nalmacenamiento mucho más grande que\nla memoria principal.", font_size=24, color=BLACK),
-            Text("Sin embargo, esta tiene un tiempo de\nacceso a la información más lenta y\ntambién es la memoria menos costosa\nen la jerarquía.", font_size=24, color=BLACK),
-            VGroup(
-                Text("Se cuentan con dos tipos:", font_size=24, color=BLACK),
-                Text("• Disco duro (HDD)", font_size=24, color=BLACK),
-                Text("• Disco de estado sólido (SSD)", font_size=24, color=BLACK),
-            ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.6)
+        # --- 3. CONTENIDO DE TEXTO (Centrado) ---
+        # Al escribir en múltiples líneas con \n, Manim centra el texto por defecto
+        txt_1 = Text(
+            "Es una unidad de memoria \"no volátil\" la cual posee una capacidad de\nalmacenamiento mucho más grande que la memoria principal.", 
+            font=fuente, font_size=22, color=color_texto, line_spacing=0.8
+        )
+        txt_2 = Text(
+            "Sin embargo, esta tiene un tiempo de acceso a la información más lento\ny también es la memoria menos costosa en la jerarquía.", 
+            font=fuente, font_size=22, color=color_secundario, line_spacing=0.8
+        )
+        txt_3_tit = Text("Se cuentan con dos tipos principales:", font=fuente, font_size=22, color=color_texto, weight=BOLD)
+        
+        # Agrupamos y centramos todo el bloque de texto
+        contenido = VGroup(txt_1, txt_2, txt_3_tit).arrange(DOWN, buff=0.4)
+        contenido.next_to(linea_subtitulo, DOWN, buff=0.5)
 
-        contenido.to_edge(LEFT, buff=1)
+        # --- 4. DIBUJOS GENERADOS CON CÓDIGO (Centrados y Simétricos) ---
+        
+        # A) Dibujo del Disco Duro (HDD) - Izquierda
+        hdd_case = RoundedRectangle(width=2.4, height=3.2, corner_radius=0.15, fill_color=WHITE, fill_opacity=1, stroke_color=BLACK, stroke_width=2)
+        hdd_platter = Circle(radius=0.9, fill_color=WHITE, fill_opacity=1, stroke_color=BLACK, stroke_width=1.5).move_to(hdd_case).shift(UP*0.35)
+        hdd_platter_inner = Circle(radius=0.3, fill_color=WHITE, fill_opacity=1, stroke_color=BLACK, stroke_width=1).move_to(hdd_platter)
+        
+        # CORREGIDO: El borde que salía rojo ahora es GRIS (color=GRAY)
+        hdd_spindle = Circle(radius=0.1, fill_color=BLACK, fill_opacity=1, color=GRAY).move_to(hdd_platter)
+        
+        # Brazo mecánico del HDD
+        # CORREGIDO: El borde que salía rojo ahora es GRIS (color=GRAY)
+        hdd_arm_base = Circle(radius=0.15, fill_color=BLACK, fill_opacity=1, color=GRAY).move_to(hdd_case.get_corner(DL) + UP*0.5 + RIGHT*0.4)
+        hdd_arm = Line(hdd_arm_base.get_center(), hdd_platter.get_center() + DOWN*0.15 + RIGHT*0.2, stroke_color=BLACK, stroke_width=3)
+        hdd_head = Dot(radius=0.06, color=BLACK).move_to(hdd_arm.get_end())
+        brazo_y_cabeza = VGroup(hdd_arm, hdd_head)
+        
+        lbl_hdd = Text("Disco duro (HDD)", font=fuente, font_size=18, color=BLACK, weight=BOLD).next_to(hdd_case, DOWN, buff=0.25)
+        hdd_completo = VGroup(hdd_case, hdd_platter, hdd_platter_inner, hdd_spindle, hdd_arm_base, brazo_y_cabeza, lbl_hdd)
+        hdd_completo.scale(0.85).move_to(DOWN * 1.8 + LEFT * 3) # Ubicado a la izquierda
 
-        hdd = ImageMobject("assets/hdd.png").scale(0.5)
-        hdd.shift(RIGHT * 3 + UP * 1)
+        # B) Dibujo del Disco de Estado Sólido (SSD) - Derecha
+        ssd_case = RoundedRectangle(width=2.4, height=3.2, corner_radius=0.1, fill_color=WHITE, fill_opacity=1, stroke_color=BLACK, stroke_width=2)
+        
+        # Chips de memoria flash
+        chips = VGroup(*[
+            RoundedRectangle(width=0.8, height=1.1, corner_radius=0.05, fill_color=WHITE, fill_opacity=1, stroke_color=BLACK, stroke_width=1.5)
+            for _ in range(4)
+        ]).arrange_in_grid(2, 2, buff=0.25).move_to(ssd_case).shift(UP*0.15)
+        
+        # Conector SATA/M.2 simulado abajo
+        connector = Rectangle(width=1.3, height=0.15, fill_color=BLACK, fill_opacity=1, stroke_width=0).move_to(ssd_case.get_bottom())
+        
+        lbl_ssd = Text("Estado sólido (SSD)", font=fuente, font_size=18, color=BLACK, weight=BOLD).next_to(ssd_case, DOWN, buff=0.25)
+        ssd_completo = VGroup(ssd_case, chips, connector, lbl_ssd)
+        ssd_completo.scale(0.85).move_to(DOWN * 1.8 + RIGHT * 3) # Ubicado a la derecha
 
-        ssd = ImageMobject("assets/ssd.png").scale(0.5)
-    
-        ssd.next_to(hdd, DOWN, buff=1).shift(RIGHT * 1.5)
-
-        self.play(Write(titulo))
-        self.play(FadeIn(contenido, shift=RIGHT))
+        # --- 5. SECUENCIA DE ANIMACIONES ---
+        
+        # Título y Textos principales
+        self.play(Write(titulo), Create(linea_subtitulo))
+        self.play(FadeIn(contenido, shift=UP * 0.2))
+        self.next_slide()
+        
+        # Animando aparición del HDD
+        self.play(Create(hdd_case), FadeIn(lbl_hdd, shift=UP*0.1))
         self.play(
-            FadeIn(hdd), 
+            Create(hdd_platter), Create(hdd_platter_inner), FadeIn(hdd_spindle),
+            Create(hdd_arm_base), Create(brazo_y_cabeza),
             run_time=1.5
         )
-        self.play(
-            FadeIn(ssd), 
-            run_time=1.5
-        )
+        
+        # Animación del brazo del HDD "leyendo" el disco
+        self.play(Rotate(brazo_y_cabeza, angle=PI/12, about_point=hdd_arm_base.get_center()), run_time=0.4)
+        self.play(Rotate(brazo_y_cabeza, angle=-PI/8, about_point=hdd_arm_base.get_center()), run_time=0.4)
+        self.play(Rotate(brazo_y_cabeza, angle=PI/24, about_point=hdd_arm_base.get_center()), run_time=0.4)
+        self.next_slide()
 
-        self.wait(2)
+        # Animando aparición del SSD
+        self.play(Create(ssd_case), FadeIn(connector), FadeIn(lbl_ssd, shift=UP*0.1))
+        
+        # Los chips aparecen uno por uno
+        self.play(LaggedStart(*[Create(chip) for chip in chips], lag_ratio=0.2), run_time=1.5)
+
+        self.wait(1)
         self.next_slide()
         self.limpiar_pantalla()
         
     def diapositiva_detalles_hdd(self):
-        titulo = Text("Disco duro (Hard Disk Drive)", font_size=45, color=BLACK)
-        titulo.to_edge(UP, buff=0.5)
+        # --- CONFIGURACIÓN INICIAL ---
+        fuente = "sans-serif"
+        color_texto = BLACK
+        
+        titulo = Text("Hard Disk Drive", font=fuente, font_size=42, color=color_texto, weight=BOLD)
+        titulo.to_edge(UP, buff=0.4)
+        
+        linea_subtitulo = Line(LEFT, RIGHT, color=BLACK, stroke_width=3).scale(3.5)
+        linea_subtitulo.next_to(titulo, DOWN, buff=0.1)
 
-        texto_descriptivo = Text(
-            "Consiste en un disco giratorio\n"
-            "cubierto de material magnético y un\n"
-            "cabezal de escritura que se encargará\n"
-            "de consultar y modificar la\n"
-            "información en la superficie del\n"
-            "disco.", 
-            font_size=25, color=BLACK, line_spacing=0.8
-        )
-        texto_descriptivo.to_edge(LEFT, buff=1.0)
+        # --- DIBUJO DEL DISCO DURO GENERADO CON CÓDIGO ---
+        hdd_case = RoundedRectangle(width=2.4, height=3.2, corner_radius=0.15, fill_color=WHITE, fill_opacity=1, stroke_color=BLACK, stroke_width=2)
+        hdd_platter = Circle(radius=0.9, fill_color=WHITE, fill_opacity=1, stroke_color=BLACK, stroke_width=1.5).move_to(hdd_case).shift(UP*0.35)
+        hdd_platter_inner = Circle(radius=0.3, fill_color=WHITE, fill_opacity=1, stroke_color=BLACK, stroke_width=1).move_to(hdd_platter)
+        
+        hdd_spindle = Circle(radius=0.1, fill_color=BLACK, fill_opacity=1, color=GRAY).move_to(hdd_platter)
+        
+        hdd_arm_base = Circle(radius=0.15, fill_color=BLACK, fill_opacity=1, color=GRAY).move_to(hdd_case.get_corner(DL) + UP*0.5 + RIGHT*0.4)
+        hdd_arm = Line(hdd_arm_base.get_center(), hdd_platter.get_center() + DOWN*0.15 + RIGHT*0.2, stroke_color=BLACK, stroke_width=3)
+        hdd_head = Dot(radius=0.06, color=BLACK).move_to(hdd_arm.get_end())
+        brazo_y_cabeza = VGroup(hdd_arm, hdd_head)
+        
+        # Agrupamos los platos para facilitar la animación luego
+        grupo_platters = VGroup(hdd_platter, hdd_platter_inner)
+        
+        hdd_completo = VGroup(hdd_case, grupo_platters, hdd_spindle, hdd_arm_base, brazo_y_cabeza)
+        
+        # Lo hacemos más grande y lo ponemos a la derecha
+        hdd_completo.scale(1.8).to_edge(RIGHT, buff=1.0).shift(DOWN * 0.2)
 
-        diagrama = ImageMobject("assets/diagrama_hdd.png").scale(1.3)
-        diagrama.to_edge(RIGHT, buff=1.0)
+        # --- TEXTOS Y DESCRIPCIONES (Lado Izquierdo) ---
+        texto_general = Text(
+            "Consiste en un disco giratorio cubierto\n"
+            "de material magnético y un cabezal de\n"
+            "escritura que se encarga de consultar y\n"
+            "modificar la información en la\n"
+            "superficie del disco.", 
+            font=fuente, font_size=24, color=color_texto, line_spacing=0.8
+        ).to_edge(LEFT, buff=0.8).shift(UP * 0.5)
 
-        self.play(Write(titulo))
-        self.wait(0.5)
+        # Textos de la estructura
+        estilo_estruct = {"font": fuente, "font_size": 20, "color": color_texto, "line_spacing": 0.8}
+        
+        tit_estructura = Text("Estructura principal:", font=fuente, font_size=24, color=color_texto, weight=BOLD).to_edge(LEFT, buff=0.8).shift(UP * 1.5)
+        
+        t_platters = Text("• Platters: Placas magnéticas de vidrio/aluminio\n  donde se almacena la información.", **estilo_estruct)
+        t_spindle = Text("• Spindle: Eje central que hace rotar los platos.\n  La velocidad se mide en RPM.", **estilo_estruct)
+        t_arm = Text("• Actuator Arm: Motor que controla el movimiento\n  del brazo sobre los platos.", **estilo_estruct)
+        t_head = Text("• Read/write Head: Cabezal que realiza la lectura\n  y escritura física de datos.", **estilo_estruct)
+
+        grupo_textos_estructura = VGroup(t_platters, t_spindle, t_arm, t_head).arrange(DOWN, aligned_edge=LEFT, buff=0.4)
+        grupo_textos_estructura.next_to(tit_estructura, DOWN, aligned_edge=LEFT, buff=0.3)
+
+
+        # --- SECUENCIA DE ANIMACIONES ---
+        
+        # 1. Entrada del título y el HDD
+        self.play(Write(titulo), Create(linea_subtitulo))
+        self.play(FadeIn(texto_general, shift=RIGHT * 0.5), Create(hdd_case))
         self.play(
-            FadeIn(texto_descriptivo, shift=UP * 0.3),
-            FadeIn(diagrama, shift=LEFT * 0.5),
-            run_time=2.5
+            Create(grupo_platters), FadeIn(hdd_spindle),
+            Create(hdd_arm_base), Create(brazo_y_cabeza),
+            run_time=1.5
         )
-        self.wait(4)
         self.next_slide()
-        self.limpiar_pantalla()
+
+        # 2. Transición a la estructura
+        self.play(
+            FadeOut(texto_general, shift=UP * 0.5),
+            FadeIn(tit_estructura, shift=UP * 0.5)
+        )
         
-    def slide_estructura_hdd(self):
-        titulo = Text("Estructura del HDD", font_size=48, color=BLACK).to_edge(UP, buff=0.5)
+        # 3. Explicando Platters
+        self.play(FadeIn(t_platters, shift=RIGHT * 0.2))
+        self.play(Indicate(grupo_platters, color=GRAY, scale_factor=1.1)) # Resalta los platos
+        self.next_slide()
+
+        # 4. Explicando Spindle
+        self.play(FadeIn(t_spindle, shift=RIGHT * 0.2))
+        self.play(Indicate(hdd_spindle, color=GRAY, scale_factor=1.5)) # Resalta el centro
+        self.next_slide()
+
+        # 5. Explicando Actuator Arm
+        self.play(FadeIn(t_arm, shift=RIGHT * 0.2))
+        self.play(Indicate(hdd_arm_base, color=GRAY, scale_factor=1.3)) # Resalta la base del brazo
+        self.next_slide()
+
+        # 6. Explicando Read/Write Head
+        self.play(FadeIn(t_head, shift=RIGHT * 0.2))
+        self.play(Indicate(brazo_y_cabeza, color=GRAY, scale_factor=1.2)) # Resalta el brazo y la cabeza
         
-        p_img = ImageMobject("assets/platters.png").scale(1.5).move_to(ORIGIN).shift(UP*0.5)
-        s_img = ImageMobject("assets/spindle.png").scale(1.5).move_to(ORIGIN).shift(UP*0.5)
-        a_img = ImageMobject("assets/actuator_arm.png").scale(1.5).move_to(ORIGIN).shift(UP*0.5)
-        h_img = ImageMobject("assets/rw_head.png").scale(1.5).move_to(ORIGIN).shift(UP*0.5)
+        # Animación extra de lectura para cerrar
+        self.play(Rotate(brazo_y_cabeza, angle=PI/12, about_point=hdd_arm_base.get_center()), run_time=0.4)
+        self.play(Rotate(brazo_y_cabeza, angle=-PI/8, about_point=hdd_arm_base.get_center()), run_time=0.4)
+        self.play(Rotate(brazo_y_cabeza, angle=PI/24, about_point=hdd_arm_base.get_center()), run_time=0.4)
 
-        t1 = Text("Platters: Placas magnéticas en forma de disco y utilizadas para almacenar\nla información. Normalmente se hacen de vidrio o aluminio.", font_size=22, color=BLACK, line_spacing=0.8).to_edge(DOWN, buff=1)
-        t2 = Text("Spindle: Mantiene los platters en su lugar y los hace rotar según se requiera.\nLa rotación, la cual se mide en revoluciones por minuto (RPM) controla que tan\nrápido la información se puede escribir o leer.", font_size=22, color=BLACK, line_spacing=0.8).to_edge(DOWN, buff=1)
-        t3 = Text("Actuator Arm: También conocido como la cabeza del actuador, es un\npequeño motor que controla el movimiento del cabezal de escritura y\nvigila la transferencia de información entre platters.", font_size=22, color=BLACK, line_spacing=0.8).to_edge(DOWN, buff=1)
-        t4 = Text("Read/write Head: El cabezal de escritura, controla el movimiento de\ntodos los cabezales de escritura, que realizan la verdadera\nlabor de lectura y escritura en los platters del disco.", font_size=22, color=BLACK, line_spacing=0.8).to_edge(DOWN, buff=1)
-
-        self.play(Write(titulo))
-        self.play(FadeIn(p_img), FadeIn(t1))
-        self.wait()
+        self.wait(1)
         self.next_slide()
-
-        self.play(FadeOut(p_img), FadeIn(s_img), ReplacementTransform(t1, t2))
-        self.wait()
-        self.next_slide()
-
-        self.play(FadeOut(s_img), FadeIn(a_img), ReplacementTransform(t2, t3))
-        self.wait()
-        self.next_slide()
-
-        self.play(FadeOut(a_img), FadeIn(h_img), ReplacementTransform(t3, t4))
-        self.wait()
         self.limpiar_pantalla()
         
     def slide_delay_hdd(self):
-        titulo = Text("Delay en el HDD", font_size=48, color=BLACK).to_edge(UP, buff=0.5)
+        fuente = "sans-serif"
+        color_texto = BLACK
+        centro_escena = ORIGIN  # Centramos el disco exactamente en el medio
 
-        p1 = Text("• Seek time: Tiempo para alcanzar el track.", font_size=22, color=BLACK)
-        p2 = Text("• Latencia rotacional: Tiempo para ubicar el sector.", font_size=22, color=BLACK)
-        p3 = Text("• Tiempo de transferencia: Depende de la rotación.", font_size=22, color=BLACK)
-        p4 = Text("• Tiempo del controlador: Procesamiento hardware.", font_size=22, color=BLACK)
+        # Cambiamos el color de fondo a blanco para que el texto negro resalte
+        self.camera.background_color = WHITE
 
-        puntos = VGroup(p1, p2, p3, p4).arrange(DOWN, aligned_edge=LEFT, buff=0.4)
+        titulo = Text("ANATOMÍA DEL DELAY (HDD)", font=fuente, font_size=38, weight=BOLD, color=color_texto)
+        titulo.to_edge(UP, buff=0.4)
+        linea_subtitulo = Line(LEFT, RIGHT, color=BLACK, stroke_width=3).scale(3.5)
+        linea_subtitulo.next_to(titulo, DOWN, buff=0.1)
 
-        puntos.to_edge(LEFT, buff=1.0)
-
-        llave = Brace(puntos, direction=RIGHT, color=BLUE_D)
+        # --- 2. DIAGRAMA CENTRAL (Disco y Brazo) ---
+        platter_base = Circle(radius=2.0, color=BLACK, fill_color=GRAY_B, fill_opacity=0.2, stroke_width=2).move_to(centro_escena)
+        pistas_fondo = VGroup(*[
+            Circle(radius=r, color=GRAY_C, stroke_width=1, stroke_opacity=0.8).move_to(centro_escena) 
+            for r in [0.8, 1.2, 1.6]
+        ])
         
-        texto_acceso = Text("Tiempo de Acceso Medio", font_size=24, color=BLUE_D, weight=BOLD)
-        formula = Text("Seek + Lat + Trans + Ctrl", font_size=16, color=GRAY)
-        
-        resultado_grupo = VGroup(texto_acceso, formula).arrange(DOWN, buff=0.2)
-        
-        resultado_grupo.next_to(llave, RIGHT, buff=0.2)
+        # EL SECTOR: Empieza a los 0 grados (a la derecha)
+        sector_objetivo = AnnularSector(
+            inner_radius=1.05, outer_radius=1.35, 
+            angle=30*DEGREES, start_angle=0*DEGREES, 
+            color=GRAY_D, fill_opacity=1, stroke_color=BLACK, stroke_width=1
+        ).move_to(centro_escena)
 
-        self.play(Write(titulo))
+        # Agrupamos todo el disco para que rote junto
+        disco_completo = VGroup(platter_base, pistas_fondo, sector_objetivo)
+
+        # BRAZO ACTUADOR
+        pivot_punto = centro_escena + LEFT * 2.8 + UP * 2.0
+        base_pivot = Dot(pivot_punto, color=BLACK, radius=0.15)
+        
+        # Posición objetivo (sobre la pista 1.2, a 90 grados es decir, UP)
+        punto_objetivo_pista = centro_escena + UP * 1.2 
+        
+        # Creamos el brazo apuntando al objetivo y luego lo rotamos hacia afuera
+        brazo = Line(pivot_punto, punto_objetivo_pista, color=BLACK, stroke_width=6)
+        cabezal = Square(side_length=0.2, color=BLACK, fill_opacity=1).move_to(punto_objetivo_pista)
+        actuador = VGroup(brazo, cabezal)
+        
+        # Movemos el brazo a su posición inicial (fuera del área de lectura)
+        angulo_inicial_brazo = 35 * DEGREES
+        actuador.rotate(angulo_inicial_brazo, about_point=pivot_punto)
+
+        # --- 3. ELEMENTOS DE TEXTO ---
+        estilo_tex = {"font_size": 24, "color": BLACK}
+        
+        l1 = MathTex(r"\bullet \text{ Seek Time } (T_s)", **estilo_tex)
+        l2 = MathTex(r"\bullet \text{ Latencia } (T_l)", **estilo_tex)
+        l3 = MathTex(r"\bullet \text{ Transferencia } (T_t)", **estilo_tex)
+        l4 = MathTex(r"\bullet \text{ Controlador } (T_c)", **estilo_tex)
+        
+        conceptos = VGroup(l1, l2, l3, l4).arrange(DOWN, aligned_edge=LEFT, buff=0.4)
+        conceptos.to_edge(LEFT, buff=0.5).shift(DOWN * 0.5)
+
+        # --- 4. FÓRMULA ---
+        formula = MathTex(
+            r"T_{total} = T_{s} + T_{l} + T_{t} + T_{c}",
+            font_size=42, color=BLACK
+        ).to_edge(DOWN, buff=0.6)
+        caja_formula = SurroundingRectangle(formula, color=GRAY_D, buff=0.3, stroke_width=2)
+
+        # --- 5. ANIMACIÓN ---
+        self.play(Write(titulo), Create(linea_subtitulo))
+        
+        # Aparece la escena
+        self.play(
+            FadeIn(disco_completo), 
+            FadeIn(conceptos, shift=RIGHT),
+            Create(base_pivot),
+            Create(actuador)
+        )
         self.wait(0.5)
 
-        for punto in puntos:
-            self.play(FadeIn(punto, shift=RIGHT * 0.2), run_time=0.5)
-        
-        self.wait(1)
+        # SIMULACIÓN SEEK (El brazo rota sobre su eje mecánicamente)
+        self.play(
+            Indicate(l1, color=PURE_RED, scale_factor=1.1),
+            Rotate(actuador, angle=-angulo_inicial_brazo, about_point=pivot_punto),
+            run_time=1.5,
+            rate_func=smooth
+        )
 
-        self.play(GrowFromCenter(llave), run_time=1.5)
+        # SIMULACIÓN LATENCIA (El disco rota 90 grados para que el sector llegue al cabezal)
+        # El sector empezó en 0° (derecha) y el cabezal está en 90° (arriba)
+        self.play(
+            Indicate(l2, color=PURE_RED, scale_factor=1.1),
+            Rotate(disco_completo, angle=90*DEGREES, about_point=centro_escena),
+            run_time=2,
+            rate_func=linear # Linear simula mejor un disco que ya está girando a velocidad constante
+        )
 
-        self.play(FadeIn(resultado_grupo, shift=RIGHT * 0.3), run_time=1)
+        # SIMULACIÓN TRANSFERENCIA
+        self.play(
+            Indicate(l3, color=PURE_RED, scale_factor=1.1),
+            Flash(cabezal, color=PURE_RED, line_length=0.3, flash_radius=0.4),
+            sector_objetivo.animate.set_fill(PURE_RED, opacity=0.8), # Ilumina el sector
+            run_time=1.5
+        )
+
+        # MOSTRAR FÓRMULA FINAL
+        self.play(
+            Indicate(l4, color=PURE_RED, scale_factor=1.1),
+            Create(caja_formula), 
+            Write(formula)
+        )
         
-        self.wait(4)
+        self.wait(3)
         self.next_slide()
         self.limpiar_pantalla()
         
@@ -1624,41 +1953,93 @@ class Presentacion(Slide):
         self.limpiar_pantalla()
         
     def slide_funcionamiento_hdd(self):
-        titulo, linea = self.crear_titulo("Funcionamiento del HDD", palabra_clave="Funcionamiento", color_clave=BLACK)
-        self.play(Write(titulo), Create(linea))
+        # --- 1. CONFIGURACIÓN Y TÍTULO ---
+        fuente = "sans-serif"
+        color_texto = BLACK
+        
+        titulo = Text("Funcionamiento del HDD", font=fuente, font_size=42, color=color_texto, weight=BOLD)
+        titulo.to_edge(UP, buff=0.4)
+        linea_subtitulo = Line(LEFT, RIGHT, color=BLACK, stroke_width=3).scale(3.5)
+        linea_subtitulo.next_to(titulo, DOWN, buff=0.1)
 
-        disco_fondo = Circle(radius=1.5, color=GRAY_D, fill_opacity=0.1)
-        track_externo = Annulus(inner_radius=1.1, outer_radius=1.4, color=GREEN_E, fill_opacity=0.5)
-        sector_dato = AnnularSector(inner_radius=1.1, outer_radius=1.4, angle=45*DEGREES, start_angle=90*DEGREES, color=RED_E, fill_opacity=0.8)
-
-        disco_completo = VGroup(disco_fondo, track_externo, sector_dato)
-        disco_completo.to_edge(RIGHT, buff=1.0).shift(DOWN*0.5)
-
-        p1 = Text("• Los platters giran entre 5400 y 15000 RPM.", font_size=20, color=BLACK)
-        p2 = Text("• El cabezal busca el 'track' y sector correcto.", font_size=20, color=BLACK)
-        p3 = Text("• Se leen/escriben señales magnéticas.", font_size=20, color=BLACK)
-        p4 = Text("• El controlador transfiere la info al PC.", font_size=20, color=BLACK)
+        # --- 2. TEXTOS DESCRIPTIVOS (Anclados a la Izquierda) ---
+        estilo_texto = {"font": fuente, "font_size": 22, "color": color_texto, "line_spacing": 0.8}
+        
+        p1 = Text("• Los platters giran a gran velocidad.", **estilo_texto)
+        p2 = Text("• El cabezal busca el 'track' y el 'sector'.", **estilo_texto)
+        p3 = Text("• Lectura/Escritura mediante magnetismo.", **estilo_texto)
+        p4 = Text("• El controlador transfiere los datos al PC.", **estilo_texto)
 
         puntos = VGroup(p1, p2, p3, p4).arrange(DOWN, aligned_edge=LEFT, buff=0.5)
-        puntos.to_edge(LEFT, buff=1.0).shift(DOWN*0.5)
+        puntos.to_edge(LEFT, buff=1.0) 
 
-        brazo = Line(disco_completo.get_center() + UP*2 + RIGHT*1, disco_completo.get_center() + UP*1.2, color=BLACK, stroke_width=6)
-        cabezal = Dot(brazo.get_end(), color=BLACK)
-        actuador = VGroup(brazo, cabezal)
+        # --- 3. DIAGRAMA DEL DISCO (Anclado a la Derecha) ---
+        centro_disco = RIGHT * 3.5 + DOWN * 0.5
         
-        self.play(FadeIn(puntos, shift=RIGHT))
-        self.play(Create(disco_completo), Create(actuador))
+        platter_base = Circle(radius=2.0, color=BLACK, fill_color=WHITE, fill_opacity=1, stroke_width=2).move_to(centro_disco)
+        centro_hueco = Circle(radius=0.3, color=BLACK, fill_color=WHITE, fill_opacity=1, stroke_width=2).move_to(centro_disco)
+        
+        # Pistas (Anillos de referencia)
+        pistas = VGroup(*[
+            Circle(radius=r, color=GRAY_C, stroke_width=1).move_to(centro_disco) 
+            for r in np.arange(0.7, 2.0, 0.4)
+        ])
+        
+        # Sectores (Líneas radiales)
+        lineas_sectores = VGroup(*[
+            Line(centro_disco, platter_base.point_at_angle(angle), color=GRAY_B, stroke_width=1) 
+            for angle in np.arange(0, TAU, TAU/8)
+        ])
 
-        self.play(
-            Rotate(disco_completo, angle=2*TAU, run_time=3, rate_func=linear),
-            actuador.animate.rotate(10*DEGREES, about_point=brazo.get_start()),
-            iteration=2
-        )
+        # --- 4. RESALTADOS (Partes del funcionamiento) ---
+        # CORRECCIÓN: Usar .shift() en lugar de .move_to()
+        
+        # Track: El camino circular
+        track_res = Annulus(inner_radius=1.1, outer_radius=1.5, color=GRAY_A, fill_opacity=0.4, stroke_width=0).shift(centro_disco)
+        
+        # Disk Sector: La "rebanada" 
+        sector_res = AnnularSector(inner_radius=0.3, outer_radius=2.0, angle=TAU/8, start_angle=TAU/8, color=GRAY_B, fill_opacity=0.3).shift(centro_disco)
+        
+        # Track Sector: El dato específico (Intersección)
+        dato_res = AnnularSector(inner_radius=1.1, outer_radius=1.5, angle=TAU/8, start_angle=TAU/8, color=GRAY_E, fill_opacity=0.9).shift(centro_disco)
 
-        self.wait(2)
+       # --- 5. ETIQUETAS Y FLECHAS ---
+        estilo_lbl = {"font": fuente, "font_size": 18, "color": BLACK, "weight": BOLD}
+        
+        # 1. Track: Apunta al cuadrante superior izquierdo (radio ~1.3, dentro del Annulus de 1.1 a 1.5)
+        lbl_track = Text("Track", **estilo_lbl).move_to(centro_disco + UP * 2.0 + LEFT * 2.0)
+        arr_track = Arrow(lbl_track.get_bottom(), centro_disco + UP * 0.92 + LEFT * 0.92, color=BLACK, tip_length=0.15)
+
+        # 2. Disk Sector: Apunta al cuadrante superior derecho, en la parte exterior de la "rebanada" (radio ~1.8)
+        lbl_sector = Text("Disk Sector", **estilo_lbl).move_to(centro_disco + UP * 2.5 + RIGHT * 1.5)
+        arr_sector = Arrow(lbl_sector.get_bottom(), centro_disco + UP * 1.65 + RIGHT * 0.68, color=BLACK, tip_length=0.15)
+
+        # 3. Track Sector (Dato): Apunta exactamente al centro geométrico de la intersección usando el método de Manim
+        lbl_dato = Text("Track Sector", **estilo_lbl).move_to(centro_disco + UP * 0.3 + RIGHT * 2.8)
+        arr_dato = Arrow(lbl_dato.get_left(), dato_res.get_center(), color=BLACK, tip_length=0.15)
+
+        # --- 6. BRAZO ACTUADOR ---
+        base_brazo = Dot(centro_disco + DOWN * 2.2 + LEFT * 2.2, color=BLACK, radius=0.15)
+        # Ahora que dato_res está bien posicionado, get_center() apuntará correctamente al sector
+        brazo = Line(base_brazo.get_center(), dato_res.get_center(), color=BLACK, stroke_width=5)
+        cabezal = Square(side_length=0.15, color=BLACK, fill_opacity=1).move_to(brazo.get_end())
+        actuador = VGroup(base_brazo, brazo, cabezal)
+
+        # --- 7. ANIMACIÓN ---
+        self.play(Write(titulo), Create(linea_subtitulo))
+        self.play(FadeIn(puntos, shift=RIGHT * 0.3))
+        
+        self.play(Create(platter_base), Create(pistas), Create(lineas_sectores), Create(centro_hueco))
+        
+        self.play(FadeIn(track_res), Write(lbl_track), Create(arr_track))
+        self.play(FadeIn(sector_res), Write(lbl_sector), Create(arr_sector))
+        self.play(FadeIn(dato_res), Write(lbl_dato), Create(arr_dato))
+        
+        self.play(Create(actuador))
+
         self.next_slide()
         self.limpiar_pantalla()
-        
+
     def slide_ssd_unidades(self):
         titulo, linea = self.crear_titulo("Unidades de Estado Sólido (SSD)", palabra_clave="Estado Sólido", color_clave=BLACK)
         self.play(Write(titulo), Create(linea))
