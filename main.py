@@ -8,46 +8,46 @@ class Presentacion(Slide):
     def construct(self):
         self.camera.background_color = WHITE
         
-        # # --- INTRODUCCIÓN Y MOTIVACIÓN ---
-        # self.slide_memoria_computador() # Jerónimo Hoyos
-        # self.slide_por_que_jerarquia() # Jerónimo Hoyos
-        # self.slide_motivacion() # Jerónimo Hoyos
+        # --- INTRODUCCIÓN Y MOTIVACIÓN ---
+        self.slide_memoria_computador() # Jerónimo Hoyos
+        self.slide_por_que_jerarquia() # Jerónimo Hoyos
+        self.slide_motivacion() # Jerónimo Hoyos
 
-        # # --- CONCEPTOS BASE ---
-        # self.slide_memoria_primaria() # Mateo
-        # self.slide_memoria_secundaria() # Mateo
+        # --- CONCEPTOS BASE ---
+        self.slide_memoria_primaria() # Mateo
+        self.slide_memoria_secundaria() # Mateo
 
-        # # --- NIVELES DE JERARQUÍA (PRIMARIA) ---
-        # self.slide_registers() # Jerónimo Hoyos
-        # self.slide_cache() # Jerónimo Hoyos
-        # self.slide_ram() # Jerónimo Hoyos
-        # self.slide_ram_escalabilidad() # Jerónimo Hoyos
+        # --- NIVELES DE JERARQUÍA (PRIMARIA) ---
+        self.slide_registers() # Jerónimo Hoyos
+        self.slide_cache() # Jerónimo Hoyos
+        self.slide_ram() # Jerónimo Hoyos
+        self.slide_ram_escalabilidad() # Jerónimo Hoyos
 
-        # # --- ALMACENAMIENTO (SECUNDARIA) ---
-        # self.almacenamiento_secundario() # Mateo
+        # --- ALMACENAMIENTO (SECUNDARIA) ---
+        self.almacenamiento_secundario() # Mateo
 
-        # # --- DISCOS DUROS (HDD) ---
-        # self.diapositiva_detalles_hdd() # Juan
-        # self.slide_funcionamiento_hdd() # Juan
-        # self.slide_delay_hdd() # Juan
-        # self.slide_comparativa_hdd() # Juan
+        # --- DISCOS DUROS (HDD) ---
+        self.diapositiva_detalles_hdd() # Juan
+        self.slide_funcionamiento_hdd() # Juan
+        self.slide_delay_hdd() # Juan
+        self.slide_comparativa_hdd() # Juan
 
         # # --- ESTADO SÓLIDO (SSD) Y FLASH ---
         self.slide_ssd_unidades() # Jerónimo Restrepo
-        # self.slide_ssd_funcionamiento() # Jerónimo Restrepo
-        # self.slide_tipos_memoria_flash() # Jerónimo Restrepo
-        # self.slide_comparativa_ssd() # Jerónimo Restrepo
+        self.slide_ssd_funcionamiento() # Jerónimo Restrepo
+        self.slide_tipos_memoria_flash() # Jerónimo Restrepo
+        self.slide_comparativa_ssd() # Jerónimo Restrepo
 
-        # # --- CONCLUSIONES Y COMPARATIVAS ---
-        # self.slide_caracteristicas() # Mateo
-        # self.slide_comparativa_jerarquia() # Mateo
-        # self.slide_memory_standards() # Mateo
+        # --- CONCLUSIONES Y COMPARATIVAS ---
+        self.slide_caracteristicas() # Mateo
+        self.slide_comparativa_jerarquia() # Mateo
+        self.slide_memory_standards() # Mateo
 
-        # # --- PRÁCTICA / SIMULACIÓN ---
-        # self.slide_simulador_nand2tetris() # Jerónimo Hoyos
+        # --- PRÁCTICA / SIMULACIÓN ---
+        self.slide_simulador_nand2tetris() # Jerónimo Hoyos
 
-        # # --- CIERRE ---
-        # self.slide_despedida()
+        # --- CIERRE ---
+        self.slide_despedida()
 
     def crear_titulo(self, texto, palabra_clave=None, color_clave=DARK_GRAY, font_size=42):
         t2c = {palabra_clave: color_clave} if palabra_clave else {}
